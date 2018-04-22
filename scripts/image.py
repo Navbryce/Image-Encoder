@@ -90,7 +90,7 @@ class StegImage(object):
 
     @staticmethod
     def convert_from_binary_array(binary_array):
-        """Converts an array of binary values to a bytearray"""
+        """Converts an array of binary value bytes to a bytearray"""
         byte_array = bytearray() # CAN'T BE A NORMAL ARRAY. MUST BE A BYTE ARRAY
         for binary in binary_array:
             int_object = StegImage.convert_from_binary(binary)
