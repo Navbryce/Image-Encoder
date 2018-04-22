@@ -24,19 +24,15 @@ class StegImage(object):
         self.update_binary_bytes() #self.binary_array is formated with binary. stores it in self.binary_array
 
         for index in range(self.offset, len(self.binary_array)):
-            self.update_lsb(index, 1)
+            self.lsb_update(index, 1)
 
 
-    def update_lsb (self, index, new_lsb):
+    def lsb_update (self, index, new_lsb):
         """
         changes the least significant bit of an image. tbh, this could be done with normal bytes by just incrementing the byte by 1 (or potentially substracting by 1/ keeping it the same)
+        index - the index of the byte
         """
-        new_lsb = str(new_lsb)
-        byte = self.binary_array[index]
-        byte = byte[0:self.binary_size - 1] + new_lsb
-
-        #apply changes
-        self.binary_array[index] = byte
+        self.set_bit(index, self.binary_size - 1, new_lsb)
 
     def print_binary_array(self):
         for byte in self.binary_array:
@@ -46,6 +42,22 @@ class StegImage(object):
         for byte in self.bytes:
             print(byte)
 
+    def set_bit(self, index_of_byte, index_of_bit, new_value):
+        """
+        index_of_byte - index of byte in array
+        index_of_bit - index of the bit in the byte
+        new_value - the new value at the index of the bit (0 or 1)
+        """
+        if index_of_bit >= self.binary_size:
+            print("You tried to modify a byte at %d index. This cannot be done. The maximum index is %d."%(index_of_bit, self.binary_size - 1))
+        else:
+            new_value = str(new_value)
+            byte = self.binary_array[index_of_byte]
+            new_byte = byte[0:index_of_bit] + new_value
+            if index_of_bit < self.binary_size - 1: # you aren't changing the final bit in the byte
+                new_byte += byte[index_of_bit + 1:]
+            #apply changes
+            self.binary_array[index_of_byte] = new_byte
     def update_binary_bytes(self):
         """Updates the binary_array array based on the bytes private variable"""
         self.binary_array = StegImage.convert_byte_array(self.bytes, self.binary_size)
