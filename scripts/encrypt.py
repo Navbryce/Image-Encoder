@@ -2,7 +2,6 @@ from image import StegImage
 class EncryptString(object):
     # uses utf-8
     byte_size = 8
-    run_xor_operation_check = lambda main_bit, comparison_bit: comparison_bit is 1 # function that says whether XOR should run on the bit
 
     # public methods
     def __init__(self, string):
@@ -31,7 +30,7 @@ class EncryptString(object):
         secret_key = EncryptString(secret_key_string)
         secret_key_bits = secret_key.XOR_on_bits([1]) # get secret key bits with x or bits
 
-        run_operation_check = EncryptString.run_xor_operation_check
+        run_operation_check = None # not necessary
         # modify data (encrypt)
         self.bits = self.XOR_on_bits(secret_key_bits, run_operation_check)
         # save changes
@@ -87,7 +86,7 @@ class EncryptString(object):
         """
         ASSUMES encrypted_bits has been encrypted with the secret_key string
         """
-        original_xor_check = EncryptString.run_xor_operation_check
+        original_xor_check = None # not necessary
         secret_key = EncryptString(secret_key_string)
         secret_key_bits = secret_key.XOR_on_bits([1]) # get secret key bits with x or bits
 
@@ -204,7 +203,7 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
     secret_key = "bbaaaa"
     encrypt.encrypt(secret_key)
     encrypted_bits = encrypt.bits
-    decrypt_string = EncryptString.decrypt(encrypted_bits, secret_key)
+    decrypt_string = EncryptString.decrypt(encrypted_bits, "aaaaa")
     if decrypt_string != string:
         print("Decryption did not work with string, %s, and secret key, %s. The output of decryption was: %s"%(string, secret_key, decrypt_string))
     else:
