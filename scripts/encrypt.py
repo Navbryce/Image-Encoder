@@ -103,7 +103,7 @@ class EncryptString(object):
         """
         bit_one = int(bit_one)
         bit_two = int(bit_two)
-        if bit_one != bit_two and (bit_two is 1 or bit_one is 1):
+        if bit_one != bit_two: # one must be true
             new_bit = "1"
         else:
             new_bit = "0"
