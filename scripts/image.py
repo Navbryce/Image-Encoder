@@ -1,5 +1,6 @@
 import os
 import io
+import random
 from PIL import Image
 
 class StegImage(object):
@@ -21,13 +22,21 @@ class StegImage(object):
         self.file_type = file_type
         self.offset = self.info[self.file_type]["offset"] # the number of bytes to offset to get to the actual image byets
         self.bytes = bytearray(image_file_string) # bytes array is formatted with regular numbers (ints)
-        self.update_binary_bytes() #self.binary_array is formated with binary. stores it in self.binary_array
+        self.update_binary_bytes() # self.binary_array is formated with binary. stores it in self.binary_array
 
-        for index in range(self.offset, len(self.binary_array)):
-            self.lsb_update(index, 1)
+        # self.number_of_pixels SHOULD be a whole number
+        self.number_of_pixels = (len(self.bytes) - self.offset) / 3 # (-self.offset) because the first few bytes aren't pixels. each pixel has 3 bytes associated with it so divide the number of bytes by 3 to get the number of pixels
 
 
-    def lsb_update (self, index, new_lsb):
+    def embed_bits(self, bits_to_embed, random_seed):
+        """
+        creates stego image with message embedded.
+        random_seed - required to determien positions randomly (should be a secret key; hold onto it to decode the image)
+        """
+        random.seed(random_seed) # not really random. random_seed will be needed to decrypt. used to determine positions of pixels
+
+
+    def lsb_update(self, index, new_lsb):
         """
         changes the least significant bit of an image. tbh, this could be done with normal bytes by just incrementing the byte by 1 (or potentially substracting by 1/ keeping it the same)
         index - the index of the byte
@@ -120,3 +129,4 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
     image.update_bytes_array() # bytes array is filled with ints. reconstructs bytes arrays based on binary array
     # after convering bytes to binary and binary back to bytes, try to recreate the image
     image.write_bytes_to_image(images_root + "recreated_" + image_name)
+    image.embed_bits([], "test");

@@ -4,12 +4,27 @@ class EncryptString(object):
     byte_size = 8
 
     # public methods
-    def __init__(self, string):
-        self.string = string
-        self.bytes = EncryptString.convert_string_to_bytes(string)
-        self.binary_array = StegImage.convert_byte_array(self.bytes, self.byte_size)
-        self.bits = self.create_bit_array()
-
+    def __init__(self, string = None, single_bits = None, secret_key = None):
+        """
+        3 constructors in 1
+        - 1 string (updates all data structures based on string)
+        - just a single_bits array (assumes data is unencrypted; will create string from bits)
+        - single-bits array AND decrypt_string (will try to unencrypt data and will update all other data structures)
+        """
+        if string is not None or (single_bits is not None and secret_key is not None): # creating from a string OR from a decryption
+            if string is not None:
+                self.string = string
+            else:
+                self.string = EncryptString.decrypt(single_bits, secret_key)
+            self.bytes = EncryptString.convert_string_to_bytes(self.string)
+            self.binary_array = StegImage.convert_byte_array(self.bytes, self.byte_size)
+            self.bits = self.create_bit_array()
+        elif single_bits is not None: # creating from an array of single bits. Assumes byts are NOT encrypted
+            self.bits = single_bits
+            self.string = self.create_string_from_bytes()
+            self.update_all_structures()
+        else:
+            print("ERROR: The constructor for Encrypt String did not work because the right parameters were not supplied")
 
     def create_binary_byte_array_from_bits(self):
         return EncryptString.convert_bits_array(self.bits, self.byte_size)
@@ -198,12 +213,12 @@ class EncryptString(object):
 
 """Driver/Tester"""
 if __name__ == '__main__': # if someone directly ran this script rather than importing it, run the code below
-    string = "test test test"
-    encrypt = EncryptString(string)
-    secret_key = "bbaaaa"
+    string = "test"
+    encrypt = EncryptString(string = string)
+    secret_key = "secret key"
     encrypt.encrypt(secret_key)
     encrypted_bits = encrypt.bits
-    decrypt_string = EncryptString.decrypt(encrypted_bits, "aaaaa")
+    decrypt_string = EncryptString.decrypt(encrypted_bits, secret_key)
     if decrypt_string != string:
         print("Decryption did not work with string, %s, and secret key, %s. The output of decryption was: %s"%(string, secret_key, decrypt_string))
     else:
