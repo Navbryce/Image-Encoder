@@ -1,7 +1,9 @@
 import os
+
 import io
 import random
 from PIL import Image
+from encrypt import EncryptString
 
 class StegImage(object):
     # static variables
@@ -27,13 +29,30 @@ class StegImage(object):
         # self.number_of_pixels SHOULD be a whole number
         self.number_of_pixels = (len(self.bytes) - self.offset) / 3 # (-self.offset) because the first few bytes aren't pixels. each pixel has 3 bytes associated with it so divide the number of bytes by 3 to get the number of pixels
 
-
-    def embed_bits(self, bits_to_embed, random_seed):
+    def embed_bits(self, bits_to_embed, color_offset, random_seed):
         """
+        color_offset - should be 0 (red), 1 (green), or 2 (blue)
         creates stego image with message embedded.
         random_seed - required to determien positions randomly (should be a secret key; hold onto it to decode the image)
         """
+        bit_embedded = {} # hash map. if the bit is already storing encrypted data, then it will be in the dictionary
         random.seed(random_seed) # not really random. random_seed will be needed to decrypt. used to determine positions of pixels
+        for message_bit in bits_to_embed:
+            index_of_byte = None
+            while (index_of_byte is None or index_of_byte in bit_embedded): # select a byte. if a bit has already been embedded in the byte, try again
+                index_of_byte = random.randint(self.offset, self.number_of_pixels * 3) # pick a byte between the lowest byte (because of codec) and highest byte for picture information
+                # index is set to the first byte of a pixel (pixels come in groups of three)
+                index_of_byte += color_offset # select a color within a certain plane.
+            bit_embedded[index_of_byte] = True
+            self.lsb_update(index_of_byte, message_bit)
+        # all of the bits have been updated
+
+    def embed_message(self, message, secret_key, random_seed):
+        """embeds a message into the image. Does not update the image file. Updates the bits stored in the instance of this object"""
+        encrypt = EncryptString(string = message)
+        encrypted_bits = encrypt.encrypt(secret_key).bits
+        self.embed_bits(encrypted_bits, 0, random_seed) # 0 because only modify the red plane
+
 
 
     def lsb_update(self, index, new_lsb):
@@ -121,12 +140,10 @@ class StegImage(object):
 
 """Driver/Tester"""
 if __name__ == '__main__': # if someone directly ran this script rather than importing it, run the code below
-    images_root = "A:/DevenirProjectsA/Image-Encoder/images/"
+    images_root = "C:/Users/navba/Downloads/DevenirProjects/Image-Encoder/images/"
     image_name ="dog.bmp"
     image_file_string = StegImage.get_image_file(images_root + image_name)
     image = StegImage(image_file_string, "bmp")
-
-    image.update_bytes_array() # bytes array is filled with ints. reconstructs bytes arrays based on binary array
+    image.embed_message("hello", "test", "test")
     # after convering bytes to binary and binary back to bytes, try to recreate the image
     image.write_bytes_to_image(images_root + "recreated_" + image_name)
-    image.embed_bits([], "test");
