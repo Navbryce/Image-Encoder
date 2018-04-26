@@ -140,7 +140,7 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
     new_name = images_root + "recreated_" + image_name
     # Important variables
     message = "Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure. We are met on a great battle-field of that war. We have come to dedicate a portion of that field, as a final resting place for those who here gave their lives that that nation might live. It is altogether fitting and proper that we should do this."
-    secret_key = "test"
+    secret_key = "encryption"
     random_seed = "random"
 
     """
@@ -150,8 +150,8 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
     image.embed_message(message, secret_key, random_seed)
     # write to new image
     image.write_bytes_to_image(new_name)
-    """
 
+"""
     # try to get message from new image
     new_image = StegImage("bmp", image_path=new_name)
     print(new_image.decode(secret_key, random_seed, len(message)))
