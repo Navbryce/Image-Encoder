@@ -135,19 +135,23 @@ class StegImage(object):
 
 """Driver/Tester"""
 if __name__ == '__main__': # if someone directly ran this script rather than importing it, run the code below
-    images_root = "A:/DevenirProjectsA/Image-Encoder/images/"
+    images_root = "C:/Users/navba/Downloads/DevenirProjectsA/Image-Encoder/images/"
     image_name ="dog.bmp"
-    image_file_string = data_manipulation.get_image_file(images_root + image_name)
-    image = StegImage("bmp", image_file_string = image_file_string)
-
-    #embed test
-    message = "a test in a place with people"
+    new_name = images_root + "recreated_" + image_name
+    # Important variables
+    message = "Now we are engaged in a great civil war, testing whether that nation, or any nation so conceived and so dedicated, can long endure. We are met on a great battle-field of that war. We have come to dedicate a portion of that field, as a final resting place for those who here gave their lives that that nation might live. It is altogether fitting and proper that we should do this."
     secret_key = "test"
     random_seed = "random"
+
+    """
+    #embed test
+    image_file_string = data_manipulation.get_image_file(images_root + image_name)
+    image = StegImage("bmp", image_file_string = image_file_string)
     image.embed_message(message, secret_key, random_seed)
     # write to new image
-    new_name = images_root + "recreated_" + image_name
     image.write_bytes_to_image(new_name)
+    """
+
     # try to get message from new image
     new_image = StegImage("bmp", image_path=new_name)
     print(new_image.decode(secret_key, random_seed, len(message)))
