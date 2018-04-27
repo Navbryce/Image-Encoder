@@ -1,5 +1,6 @@
 import sys
 import random
+import math
 import traceback
 from utilities import data_manipulation
 from encrypt import EncryptString
@@ -36,7 +37,7 @@ class StegImage(object):
             # self.number_of_pixels SHOULD be a whole number
             self.number_of_pixels = (len(self.bytes) - self.offset) / 3 # (-self.offset) because the first few bytes aren't pixels. each pixel has 3 bytes associated with it so divide the number of bytes by 3 to get the number of pixels
 
-    def decode (self, secret_key, random_seed, message_length):
+    def decode (self, secret_key, random_seed, message_length=math.inf):
         """
         Attempts to decode a message hidden in the image
         The secret_key and random_seed MUST be the same as the ones used to embed the message initially
@@ -46,7 +47,8 @@ class StegImage(object):
         bytes_visited = {} # a dictionary of the unique bytes already visited
         color_offset = StegImage.color_offset # the color plane where the message exists
         recent_bits = [] # an array. each element is a single bit
-        while len(bytes_visited) < message_length * self.binary_size:   # will try to decode one letter at a time until an error is thrown or it reaches the end of the image. (the algo has no idea when the message stops)
+        message_over = False
+        while ((len(bytes_visited) < message_length * self.binary_size) and not message_over) and len(bytes_visited) < (len(self.bytes) - 54)/3:   # will try to decode one letter at a time until an error is thrown or it reaches the end of the image. (the algo has no idea when the message stops)
             index_of_byte = None
             while (index_of_byte is None or index_of_byte in bytes_visited): # if the byte is visited twice, in the embed algo, it just skips it the second time and moves on, so do the same when decoding
                 index_of_byte = random.randint(self.offset, self.number_of_pixels * 3)
@@ -143,7 +145,7 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
     secret_key = "encryption"
     random_seed = "random"
 
-    """
+
     #embed test
     image_file_string = data_manipulation.get_image_file(images_root + image_name)
     image = StegImage("bmp", image_file_string = image_file_string)
@@ -151,7 +153,6 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
     # write to new image
     image.write_bytes_to_image(new_name)
 
-"""
     # try to get message from new image
     new_image = StegImage("bmp", image_path=new_name)
-    print(new_image.decode(secret_key, random_seed, len(message)))
+    print(new_image.decode(secret_key, random_seed, message_length=len(message)))

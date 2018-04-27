@@ -98,15 +98,17 @@ class EncryptString(object):
 
     # static method
     @staticmethod
-    def decrypt(encrypted_bits, secret_key_string):
+    def decrypt(encrypted_bits, secret_key_string, character_offset=0):
         """
         ASSUMES encrypted_bits has been encrypted with the secret_key string
+        character_number - the number of characters BEFORE this character (or series of characters) in the message. For example, you might only want to decode the 5th letter of an encoded string
         """
         original_xor_check = None # not necessary
         secret_key = EncryptString(secret_key_string)
         secret_key_bits = secret_key.XOR_on_bits([1]) # get secret key bits with x or bits
 
-        decrypted_bits = data_manipulation.XOR_on_bits_reverse(encrypted_bits, secret_key_bits, original_xor_check)
+        offset = character_offset * 8 # the number of bits to offset
+        decrypted_bits = data_manipulation.XOR_on_bits_reverse(encrypted_bits, secret_key_bits, original_xor_check, comparison_offset = offset)
         decrypted_bytes_in_binary = data_manipulation.convert_bits_array(decrypted_bits, EncryptString.byte_size)
         decrypted_int_bytes = data_manipulation.convert_from_binary_array(decrypted_bytes_in_binary)
         string = data_manipulation.convert_bytes_to_string(decrypted_int_bytes)

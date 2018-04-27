@@ -115,15 +115,16 @@ def get_image_file(file_path):
     return file_string
 
 
-def XOR_on_bits_reverse(encrypted_bits, original_comparison_bits, run_operation_check = None):
+def XOR_on_bits_reverse(encrypted_bits, original_comparison_bits, run_operation_check = None, comparison_offset = 0):
     """
     performs REVERSE XOR operation on encrypted_bits.
     ASSUMES encrypted_bits has been encrypted with XOR with original_comparison_bits as the comparison
     ASSUMES the same run_operation_check was used in the original XOR
     ASSUMES original_comparison_bits  was used in the XOR operation used to encrypt the bits
+    coparison_offset - the number of bits to offset for the starting comparison bit. Used when decrypting part of an encrypted string and the encoding bits are not at the start
     """
     result = []
-    comparison_bit_index = 0
+    comparison_bit_index = comparison_offset
     for bit_index in range(0, len(encrypted_bits)):
         encrypt_bit = int(encrypted_bits[bit_index])
         comparison_bit = int(original_comparison_bits[comparison_bit_index])
