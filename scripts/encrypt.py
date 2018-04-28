@@ -107,7 +107,7 @@ class EncryptString(object):
         secret_key = EncryptString(secret_key_string)
         secret_key_bits = secret_key.XOR_on_bits([1]) # get secret key bits with x or bits
 
-        offset = character_offset * 8 # the number of bits to offset
+        offset = character_offset * EncryptString.byte_size # the number of bits to offset (each character is byte with the byte size of bits)
         decrypted_bits = data_manipulation.XOR_on_bits_reverse(encrypted_bits, secret_key_bits, original_xor_check, comparison_offset = offset)
         decrypted_bytes_in_binary = data_manipulation.convert_bits_array(decrypted_bits, EncryptString.byte_size)
         decrypted_int_bytes = data_manipulation.convert_from_binary_array(decrypted_bytes_in_binary)

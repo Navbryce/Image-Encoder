@@ -47,7 +47,9 @@ class StegImage(object):
         bytes_visited = {} # a dictionary of the unique bytes already visited
         color_offset = StegImage.color_offset # the color plane where the message exists
         recent_bits = [] # an array. each element is a single bit
+        message = ""
         message_over = False
+        character_offset = 0
         while ((len(bytes_visited) < message_length * self.binary_size) and not message_over) and len(bytes_visited) < (len(self.bytes) - 54)/3:   # will try to decode one letter at a time until an error is thrown or it reaches the end of the image. (the algo has no idea when the message stops)
             index_of_byte = None
             while (index_of_byte is None or index_of_byte in bytes_visited): # if the byte is visited twice, in the embed algo, it just skips it the second time and moves on, so do the same when decoding
@@ -57,11 +59,20 @@ class StegImage(object):
             byte = self.binary_array[index_of_byte]
             bit = data_manipulation.get_bit_from_byte(byte, self.binary_size - 1) # get the last bit of the byte
             recent_bits.append(bit)
-        # decrypt
-        encrypt_object = EncryptString(single_bits=recent_bits, secret_key=secret_key)
-        encrypt_string = encrypt_object.string
-        message = encrypt_string
-        recent_bits = [] # reset recent bits
+
+            if len(recent_bits) == StegImage.binary_size: # if an entire byte is stored:
+                # attempt to decrypt
+                try:
+                    letter = EncryptString.decrypt(recent_bits, secret_key, character_offset = character_offset) # if this throws an error, assume the end of the message has been reached
+                    # a letter has been successfully decrypted if it reaches this point
+                    message += letter
+                    character_offset += 1 # another character in the message has been found
+                    recent_bits = []
+                except:
+                    # print("The end of the message has been reached or the message was not encoded successfully/the wrong decode parameters were given")
+                    message_over = True # assume the emssage is over if an error ahs been reached
+                    #traceback.print_exc() # since an error is expected (a utf-8 decode error), don't print it
+
         return message
 
     def embed_bits(self, bits_to_embed, color_offset, random_seed):
@@ -137,7 +148,7 @@ class StegImage(object):
 
 """Driver/Tester"""
 if __name__ == '__main__': # if someone directly ran this script rather than importing it, run the code below
-    images_root = "C:/Users/navba/Downloads/DevenirProjectsA/Image-Encoder/images/"
+    images_root = "A:/DevenirProjectsA/Image-Encoder/images/"
     image_name ="dog.bmp"
     new_name = images_root + "recreated_" + image_name
     # Important variables
@@ -155,4 +166,4 @@ if __name__ == '__main__': # if someone directly ran this script rather than imp
 
     # try to get message from new image
     new_image = StegImage("bmp", image_path=new_name)
-    print(new_image.decode(secret_key, random_seed, message_length=len(message)))
+    print(new_image.decode(secret_key, random_seed))

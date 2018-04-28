@@ -124,7 +124,10 @@ def XOR_on_bits_reverse(encrypted_bits, original_comparison_bits, run_operation_
     coparison_offset - the number of bits to offset for the starting comparison bit. Used when decrypting part of an encrypted string and the encoding bits are not at the start
     """
     result = []
-    comparison_bit_index = comparison_offset
+    if comparison_offset >= len(original_comparison_bits):
+        comparison_bit_index = comparison_offset % len(original_comparison_bits) # modulus because the comparison off_set MIGHT be greater than the length of the comparison array if the message is longer than the secret_key
+    else:
+        comparison_bit_index = comparison_offset
     for bit_index in range(0, len(encrypted_bits)):
         encrypt_bit = int(encrypted_bits[bit_index])
         comparison_bit = int(original_comparison_bits[comparison_bit_index])
