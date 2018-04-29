@@ -114,7 +114,6 @@ def get_image_file(file_path):
         file_string = image_file_locked.read()
     return file_string
 
-
 def XOR_on_bits_reverse(encrypted_bits, original_comparison_bits, run_operation_check = None, comparison_offset = 0):
     """
     performs REVERSE XOR operation on encrypted_bits.

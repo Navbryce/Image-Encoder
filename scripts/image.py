@@ -41,6 +41,7 @@ class StegImage(object):
         """
         Attempts to decode a message hidden in the image
         The secret_key and random_seed MUST be the same as the ones used to embed the message initially
+        message_length - will ensure that the decoded string doesn't contain any extra characters. If not specified, the decoder will keep trying to decode until an error is thrown
         """
         # seed the random number generator with the seed used to embed
         random.seed(random_seed)
