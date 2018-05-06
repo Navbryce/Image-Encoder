@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApp1
 {
-    public partial class ImageEncoder : Form
+    public partial class ImageEncoderView : Form
     {
         public static int ENCODING = 1;
         public static int DECODING = -1;
@@ -19,15 +19,20 @@ namespace WindowsFormsApp1
         private String defaultDialogueValue;
 
         private Size maxImagePreviewSize;
-        private int status = ImageEncoder.NEUTRAL; // represents what the user is trying to do
-        public ImageEncoder()
+        private int status = ImageEncoderView.NEUTRAL; // represents what the user is trying to do
+        public ImageEncoderView()
         {
             InitializeComponent();
             maxImagePreviewSize = picturePreview.Size;
             defaultDialogueValue = imageUploadDialog.FileName;
 
+            // Set default visibilities
+
             // Disable action buttons until an image is selected
             toggleActionButtons(false);
+            updateActionStatus();
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -88,10 +93,45 @@ namespace WindowsFormsApp1
             updateActionStatus(); // updates the status variable
 
         }
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void actionSelectPanel_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
         // Utility functions
 
         // Private utility functions
-        private Size scaleImageToSize(Size imageSize, Size boxSize)
+        private String getActionString (int status)
+        {
+            String returnString;
+            if (status == ImageEncoderView.DECODING)
+            {
+                returnString = "Decode";
+            } else if (status == ImageEncoderView.ENCODING)
+            {
+                returnString = "Encode";
+            } else
+            {
+                returnString = "No Action Selected";
+            }
+            return returnString;
+        }
+
+        private Size scaleImageToSize (Size imageSize, Size boxSize)
         {
             double ratio = (double)imageSize.Width / (double)imageSize.Height;
             int widthBasedOnHeight = (int)(ratio * boxSize.Height); // Use the boxes height?
@@ -114,33 +154,53 @@ namespace WindowsFormsApp1
             radioToggle(radioButtons, newStatus);
         }
 
-        private void radioToggle(RadioButton[] radioButtons, Boolean newStatus)
+        private void radioToggle (RadioButton[] radioButtons, Boolean newStatus)
         {
             foreach (RadioButton button in radioButtons)
             {
                 button.Enabled = newStatus;
             }
         }
+
         /**
          * Will update the action status based on buttons.
          * Returns the OLD status
          * */
-        private int updateActionStatus()
+        private int updateActionStatus ()
         {
             int oldStatus = status;
             if (decodeActionButton.Checked)
             {
-                status = ImageEncoder.DECODING;
-            } else if (encodeActionButton.Checked)
+                status = ImageEncoderView.DECODING;
+
+                parametersPanel.Visible = true;
+                messageParameterPanel.Visible = false;
+                applyActionButton.Text = getActionString(status);
+                applyActionButton.Visible = true;
+            }
+            else if (encodeActionButton.Checked)
             {
-                status = ImageEncoder.ENCODING;
-            } else
+                status = ImageEncoderView.ENCODING;
+
+                parametersPanel.Visible = true;
+                messageParameterPanel.Visible = true;
+                applyActionButton.Text = getActionString(status);
+                applyActionButton.Visible = true;
+
+            }
+            else
             {
-                status = ImageEncoder.NEUTRAL;
+                status = ImageEncoderView.NEUTRAL;
+                parametersPanel.Visible = false;
+                applyActionButton.Visible = false;
+                applyActionButton.Text = getActionString(status);
             }
             return oldStatus;
         }
 
+        private void applyActionButton_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }

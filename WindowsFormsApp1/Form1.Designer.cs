@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApp1
 {
-    partial class ImageEncoder
+    partial class ImageEncoderView
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEncoder));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEncoderView));
             this.imageUploadDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
             this.picturePreview = new System.Windows.Forms.PictureBox();
@@ -39,9 +39,22 @@
             this.parametersPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.requiredParametersPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.messageParameterPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.encryptionKey = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.positionSeed = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.messageBox = new System.Windows.Forms.TextBox();
+            this.applyActionButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).BeginInit();
             this.actionSelectPanel.SuspendLayout();
             this.parametersPanel.SuspendLayout();
+            this.requiredParametersPanel.SuspendLayout();
+            this.messageParameterPanel.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageUploadDialog
@@ -73,6 +86,7 @@
             this.actionSelectPanel.Controls.Add(this.decodeActionButton);
             resources.ApplyResources(this.actionSelectPanel, "actionSelectPanel");
             this.actionSelectPanel.Name = "actionSelectPanel";
+            this.actionSelectPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.actionSelectPanel_Paint);
             // 
             // label2
             // 
@@ -105,31 +119,98 @@
             // 
             // requiredParametersPanel
             // 
+            this.requiredParametersPanel.Controls.Add(this.flowLayoutPanel1);
+            this.requiredParametersPanel.Controls.Add(this.flowLayoutPanel2);
             resources.ApplyResources(this.requiredParametersPanel, "requiredParametersPanel");
             this.requiredParametersPanel.Name = "requiredParametersPanel";
             // 
             // messageParameterPanel
             // 
+            this.messageParameterPanel.Controls.Add(this.label4);
+            this.messageParameterPanel.Controls.Add(this.messageBox);
             resources.ApplyResources(this.messageParameterPanel, "messageParameterPanel");
             this.messageParameterPanel.Name = "messageParameterPanel";
             // 
-            // ImageEncoder
+            // encryptionKey
+            // 
+            resources.ApplyResources(this.encryptionKey, "encryptionKey");
+            this.encryptionKey.Name = "encryptionKey";
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.label1);
+            this.flowLayoutPanel1.Controls.Add(this.encryptionKey);
+            resources.ApplyResources(this.flowLayoutPanel1, "flowLayoutPanel1");
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            // 
+            // label1
+            // 
+            resources.ApplyResources(this.label1, "label1");
+            this.label1.Name = "label1";
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.Controls.Add(this.label3);
+            this.flowLayoutPanel2.Controls.Add(this.positionSeed);
+            resources.ApplyResources(this.flowLayoutPanel2, "flowLayoutPanel2");
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
+            // 
+            // positionSeed
+            // 
+            resources.ApplyResources(this.positionSeed, "positionSeed");
+            this.positionSeed.Name = "positionSeed";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // messageBox
+            // 
+            resources.ApplyResources(this.messageBox, "messageBox");
+            this.messageBox.Name = "messageBox";
+            this.messageBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // applyActionButton
+            // 
+            resources.ApplyResources(this.applyActionButton, "applyActionButton");
+            this.applyActionButton.ForeColor = System.Drawing.Color.Black;
+            this.applyActionButton.Name = "applyActionButton";
+            this.applyActionButton.UseVisualStyleBackColor = true;
+            this.applyActionButton.Click += new System.EventHandler(this.applyActionButton_Click);
+            // 
+            // ImageEncoderView
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.applyActionButton);
             this.Controls.Add(this.parametersPanel);
             this.Controls.Add(this.actionSelectPanel);
             this.Controls.Add(this.picturePreview);
             this.Controls.Add(this.button1);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "ImageEncoder";
+            this.Name = "ImageEncoderView";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).EndInit();
             this.actionSelectPanel.ResumeLayout(false);
             this.actionSelectPanel.PerformLayout();
             this.parametersPanel.ResumeLayout(false);
+            this.requiredParametersPanel.ResumeLayout(false);
+            this.messageParameterPanel.ResumeLayout(false);
+            this.messageParameterPanel.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
+            this.flowLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -146,6 +227,15 @@
         private System.Windows.Forms.FlowLayoutPanel parametersPanel;
         private System.Windows.Forms.FlowLayoutPanel requiredParametersPanel;
         private System.Windows.Forms.FlowLayoutPanel messageParameterPanel;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox encryptionKey;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox positionSeed;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox messageBox;
+        private System.Windows.Forms.Button applyActionButton;
     }
 }
 
