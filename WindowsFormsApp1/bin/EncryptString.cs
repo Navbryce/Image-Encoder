@@ -66,7 +66,29 @@ namespace WindowsFormsApp1.bin {
             bytes = DataManipulation.convertStringToBytes(message);
             binaryList = DataManipulation.convertByteListToBinaryList(bytes, byteSize);
             bitList = DataManipulation.convertBinaryListToBitList(binaryList);
+        }
+        /*
+         * Assumes bitList has been changed in some way, so recreate everything else, EXCEPT for the string from the singleBits
+         * */
+        public void recreateDataStructuresFromBits()
+        {
             binaryList = DataManipulation.convertBitListToBinaryList(bitList, byteSize);
+            bytes = DataManipulation.convertBinaryListToByteList(BinaryList, byteSize);
+        }
+
+        /**
+         * Will throw an exception if the bytes don't convert to an actual string
+         * */
+        public String recreateStringFromBytes() {
+            try
+            {
+                String stringValue = DataManipulation.convertBytesToString(bytes);
+                message = stringValue;
+            } catch (Exception ex)
+            {
+                throw ex; // throw the error if an error occurred while converting the bytes to a string, probably because one of the bytes did not represent a real character
+            }
+            return message;
         }
     }
 }

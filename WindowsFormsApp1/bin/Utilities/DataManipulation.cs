@@ -21,6 +21,34 @@ namespace WindowsFormsApp1.bin.Utilities
             }
             return outputBit;
         }
+        /**
+         * Will run bitXOR on each mainBit and its corresponding compareBits. If compareBits is smaller than mainBits, it will just loop for the compareBits
+         * */
+        public static LinkedList<char> bitXORList (LinkedList<char> mainBits, LinkedList<char> compareBits)
+        {
+            LinkedList<char> outputList = new LinkedList<char>();
+
+            IEnumerable<char> mainIterator = mainBits.AsEnumerable();
+            IEnumerable<char> compareIterator = compareBits.AsEnumerable();
+
+            LinkedListNode<char> mainNode = mainBits.First;
+            LinkedListNode<char> compareNode = compareBits.First;
+
+            while (mainNode != null)
+            {
+                char output = bitXOR(mainNode.Value, compareNode.Value);
+                outputList.AddLast(output);
+
+                mainNode = mainNode.Next;
+                compareNode = compareNode.Next;
+                if (compareNode == null) // all of the compare bits have been iterated through, so restart from the beginning
+                {
+                    compareNode = compareBits.First;
+                }
+            }
+            return outputList;
+
+        }
 
         // Small data object functions
         
