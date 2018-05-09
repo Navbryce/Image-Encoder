@@ -47,7 +47,7 @@
   <ItemGroup>
     <Compile Include="bin\EncryptString.cs" />
     <Compile Include="bin\ImageEncoder.cs" />
-    <Compile Include="bin\Utilities\Class1.cs" />
+    <Compile Include="bin\Utilities\DataManipulation.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

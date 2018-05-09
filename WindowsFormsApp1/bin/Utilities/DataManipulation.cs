@@ -8,6 +8,20 @@ namespace WindowsFormsApp1.bin.Utilities
 {
     class DataManipulation
     {
+        // Encryption Functions
+        public static char bitXOR (char bit_one, char bit_two)
+        {
+            char outputBit;
+            if (bit_one != bit_two) // one of the bits must be true (both can't be true or false)
+            {
+                outputBit = '1';
+            } else
+            {
+                outputBit = '0';
+            }
+            return outputBit;
+        }
+
         // Small data object functions
         
          /**
@@ -35,6 +49,51 @@ namespace WindowsFormsApp1.bin.Utilities
                 bytes.AddLast(convertBinaryToByte(binaryString));
             }
             return bytes;
+        }
+        /**
+         * Converts an array of string bytes (in binary) to an array where each element is a single bit
+         * */
+        public static LinkedList<char> convertBinaryListToBitList (LinkedList<String> binaryList)
+        {
+            LinkedList<char> stringBits = new LinkedList<char>();
+            foreach (String binaryByte in binaryList)
+            {
+                foreach (char bit in binaryByte)
+                {
+                    stringBits.AddLast(bit);
+                }
+            }
+            return stringBits;
+        }
+
+        /**
+         * Converts an array of single bits to an array of string bytes (in binary)
+         * */
+        public static LinkedList<String> convertBitListToBinaryList (LinkedList<char> bitList, int byteSize)
+        {
+            LinkedList<String> binaryByteList = new LinkedList<string>();
+            if (bitList.Count % byteSize != 0)
+            {
+                throw new SystemException("Can't produce a whole number of bytes from the inputted bitlist and bytesize");
+            } else
+            {
+                int bitCounter = 0;
+                String byteString = "";
+                foreach (char bit in bitList)
+                {
+                    byteString += bit;
+                    bitCounter++;
+                    if (bitCounter == 8)
+                    {
+                        binaryByteList.AddLast(byteString);
+
+                        // a complete byte has been added, so start a new byte
+                        bitCounter = 0;
+                        byteString = "";
+                    }
+                }
+            }
+            return binaryByteList;
         }
         public static LinkedList<String> convertByteListToBinaryList (LinkedList<Byte> bytes, int byteSize)
         {

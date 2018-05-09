@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp1.bin;
 
 namespace WindowsFormsApp1
 {
@@ -112,7 +113,25 @@ namespace WindowsFormsApp1
         {
 
         }
+        private void applyActionButton_Click(object sender, EventArgs e)
+        {
+            if (status == ImageEncoderView.ENCODING)
+            {
+                encode();
+            }
+        }
+
         // Utility functions
+
+        // ENCODE/DECODE FUNCTIONS
+        private void encode ()
+        {
+            String text = messageBox.Text;
+            if (text.Length > 0)
+            {
+                EncryptString encode = new EncryptString(text);
+            }
+        }
 
         // Private utility functions
         private String getActionString (int status)
@@ -198,9 +217,6 @@ namespace WindowsFormsApp1
             return oldStatus;
         }
 
-        private void applyActionButton_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 }

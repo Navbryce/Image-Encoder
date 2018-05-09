@@ -10,7 +10,7 @@ namespace WindowsFormsApp1.bin {
         public static int byteSize = 8;
 
         // Public variables
-        public LinkedList<String> binaryList
+        public LinkedList<String> BinaryList
         {
             get
             {
@@ -21,7 +21,18 @@ namespace WindowsFormsApp1.bin {
                 binaryList = value;
             }
         }
-        public LinkedList<Byte> bytes
+        public LinkedList<char> BitList
+        {
+            get
+            {
+                return BitList;
+            }
+            set
+            {
+                BitList = value;
+            }
+        }
+        public LinkedList<Byte> Bytes
         {
             get
             {
@@ -32,7 +43,7 @@ namespace WindowsFormsApp1.bin {
                 bytes = value;
             }
         }
-        public String message
+        public String Message
         {
             get
             {
@@ -43,11 +54,19 @@ namespace WindowsFormsApp1.bin {
                 message = value;
             }
         }
+
+        // private variables
+        private LinkedList<String> binaryList;
+        private LinkedList<char> bitList;
+        private LinkedList<Byte> bytes;
+        private String message;
         public EncryptString(String messageValue)
         {
             message = messageValue;
             bytes = DataManipulation.convertStringToBytes(message);
             binaryList = DataManipulation.convertByteListToBinaryList(bytes, byteSize);
+            bitList = DataManipulation.convertBinaryListToBitList(binaryList);
+            binaryList = DataManipulation.convertBitListToBinaryList(bitList, byteSize);
         }
     }
 }
