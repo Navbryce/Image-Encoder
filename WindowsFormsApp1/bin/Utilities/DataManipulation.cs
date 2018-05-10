@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -191,6 +194,35 @@ namespace WindowsFormsApp1.bin.Utilities
             }
             return bytesList;
         }
+
+        // Image functions
+        public static Image imageFromByteList(LinkedList<Byte> byteList)
+        {
+            Byte[] bytes = byteList.ToArray();
+            MemoryStream stream = new MemoryStream(bytes); // write the bytes to the MemoryStream
+            return Image.FromStream(stream);
+        }
+        public static LinkedList<Byte> imageToByteList(Image image, String imageType)
+        {
+            LinkedList<Byte> resultList;
+            MemoryStream stream = new MemoryStream();
+
+            imageType = imageType.ToLower();
+            ImageFormat format;
+            if (imageType.Equals("bmp"))
+            {
+                format = System.Drawing.Imaging.ImageFormat.Bmp;
+            } else
+            {
+                throw new Exception("The image of type " + imageType + " could not be converted to a byte array. It is not an acceptable type.");
+            }
+
+            image.Save(stream, format); // write the image to a byte a memory stream
+            Byte[] byteArray = stream.ToArray(); // convert memory stream to array
+            resultList = new LinkedList<byte>(byteArray); // convert array to linked list
+            return resultList;
+        }
+
 
     }
 }

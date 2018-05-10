@@ -60,8 +60,8 @@ namespace WindowsFormsApp1
 
             if (filepath.Length > 0 && !filepath.Equals(defaultDialogueValue)) // returns the defaultDialogueValue if no image was selected
             {
-                System.Drawing.Image image = System.Drawing.Image.FromFile(filepath);
-                System.Drawing.Image previewImage = (System.Drawing.Image)image.Clone(); // Clones the Image so it can be modified to fit the preview box
+                Image image = System.Drawing.Image.FromFile(filepath);
+                Image previewImage = (System.Drawing.Image)image.Clone(); // Clones the Image so it can be modified to fit the preview box
 
                 // Resize the piciture box to maintain image dimensions
                 Size imageDimensions = previewImage.Size;
@@ -134,9 +134,7 @@ namespace WindowsFormsApp1
                 EncryptString encode = new EncryptString(text);
                 LinkedList<char> encryptedBits = encode.encrypt(encryptionKeyText);
                 EncryptString decrypt = new EncryptString(encryptedBits, encryptionKeyText);
-                String message = decrypt.recreateStringFromBytes();
-                
-                var a = "a";
+                String message = decrypt.recreateStringFromBytes();                
             }
         }
 
