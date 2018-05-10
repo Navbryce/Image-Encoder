@@ -21,15 +21,32 @@ namespace WindowsFormsApp1.bin.Utilities
             }
             return outputBit;
         }
+
+        public static char bitXORReverse (char xorBit, char originalCompareBit)
+        {
+            char originalBit;
+            if (xorBit == '1')
+            {
+                if (originalCompareBit == '1')
+                {
+                    originalBit = '0';
+                } else
+                {
+                    originalBit = '1';
+                }
+            } else
+            {
+                originalBit = originalCompareBit;
+            }
+            return originalBit;
+        }
+
         /**
          * Will run bitXOR on each mainBit and its corresponding compareBits. If compareBits is smaller than mainBits, it will just loop for the compareBits
          * */
         public static LinkedList<char> bitXORList (LinkedList<char> mainBits, LinkedList<char> compareBits)
         {
             LinkedList<char> outputList = new LinkedList<char>();
-
-            IEnumerable<char> mainIterator = mainBits.AsEnumerable();
-            IEnumerable<char> compareIterator = compareBits.AsEnumerable();
 
             LinkedListNode<char> mainNode = mainBits.First;
             LinkedListNode<char> compareNode = compareBits.First;
@@ -48,6 +65,28 @@ namespace WindowsFormsApp1.bin.Utilities
             }
             return outputList;
 
+        }
+
+        public static LinkedList<char> bitXORListReverse (LinkedList<char> xorBits, LinkedList<char> originalCompareBits)
+        {
+            LinkedList<char> originalBits = new LinkedList<char>();
+
+            LinkedListNode<char> mainNode = xorBits.First;
+            LinkedListNode<char> compareNode = originalCompareBits.First;
+
+            while (mainNode != null)
+            {
+                char output = bitXORReverse(mainNode.Value, compareNode.Value);
+                originalBits.AddLast(output);
+
+                mainNode = mainNode.Next;
+                compareNode = compareNode.Next;
+                if (compareNode == null) // all of the compare bits have been iterated through, so restart from the beginning
+                {
+                    compareNode = originalCompareBits.First;
+                }
+            }
+            return originalBits;
         }
 
         // Small data object functions

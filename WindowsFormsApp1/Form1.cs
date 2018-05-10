@@ -115,21 +115,28 @@ namespace WindowsFormsApp1
         }
         private void applyActionButton_Click(object sender, EventArgs e)
         {
+            String encryptKeyText = encryptionKey.Text;
+            String positionSeedText = positionSeed.Text;
             if (status == ImageEncoderView.ENCODING)
             {
-                encode();
+                encode(encryptKeyText, positionSeedText);
             }
         }
 
         // Utility functions
 
         // ENCODE/DECODE FUNCTIONS
-        private void encode ()
+        private void encode (String encryptionKeyText, String positionSeedText)
         {
             String text = messageBox.Text;
             if (text.Length > 0)
             {
                 EncryptString encode = new EncryptString(text);
+                LinkedList<char> encryptedBits = encode.encrypt(encryptionKeyText);
+                EncryptString decrypt = new EncryptString(encryptedBits, encryptionKeyText);
+                String message = decrypt.recreateStringFromBytes();
+                
+                var a = "a";
             }
         }
 
