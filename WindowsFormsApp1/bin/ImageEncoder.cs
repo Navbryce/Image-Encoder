@@ -22,17 +22,6 @@ public class ImageEncoder
             binaryList = value;
         }
     }
-    public LinkedList<char> BitList
-    {
-        get
-        {
-            return BitList;
-        }
-        set
-        {
-            BitList = value;
-        }
-    }
     public LinkedList<Byte> Bytes
     {
         get
@@ -42,6 +31,17 @@ public class ImageEncoder
         set
         {
             bytes = value;
+        }
+    }
+    public int ByteOffset
+    {
+        get
+        {
+            return byteOffset;
+        }
+        set
+        {
+            byteOffset = value;
         }
     }
     public Image Image
@@ -66,13 +66,25 @@ public class ImageEncoder
             imageType = value;
         }
     }
+    public int PixelsCount
+    {
+        get
+        {
+            return numberOfPixels;
+        }
+        set
+        {
+            numberOfPixels = value;
+        }
+    }
 
     // private variables
     private LinkedList<String> binaryList;
-    private LinkedList<char> bitList;
     private LinkedList<Byte> bytes;
+    private int byteOffset;
     private Image image;
     private String imageType;
+    private int numberOfPixels;
 
     public ImageEncoder(Image imageParameter, String imageTypeParameter)
 	{
@@ -85,8 +97,8 @@ public class ImageEncoder
         {
             bytes = DataManipulation.imageToByteList(image, imageType);
             binaryList = DataManipulation.convertByteListToBinaryList(bytes, byteSize);
-            bitList = DataManipulation.convertBinaryListToBitList(binaryList);
-
+            imageOffset.TryGetValue(imageType, out byteOffset); // will assign byteOffset to the byteOffset parameter
+            numberOfPixels = (bytes.Count - byteOffset) / 3;  // each pixel is three bytes
         } else
         {
             throw new Exception("The image type of " + imageType + " is not an acceptable type.");
@@ -94,24 +106,46 @@ public class ImageEncoder
 
 	}
 
+    // Static methods
+
     public static void intializeOffsetList ()
     {
         // acceptable types
         imageOffset.Add("bmp", 54); // the number of bytes to offset
     }
 
+    // Encryption/Decryption methods
 
     /// <summary>
-    /// Data manipulation methods
+    /// embeds bits into LSB of image 
     /// </summary>
-    /*
-     * Assumes bitList has been changed in some way, so recreate everything else, EXCEPT for the Image from the singleBits
-     * */
+    /// <param name="bitsToEmbed">an array where each element is a bit to embed</param>
+    /// <param name="colorOffSet">colorOffset should be between 0 and 2</param>
+    public void embedBits (LinkedList<char> bitsToEmbed, String randomSeed, int colorOffSet) 
+    {
+        String[] bytesArray = DataManipulation.linkedListToArray(binaryList); // converts linked list to array, which is better structure for this task. Maybe should have used arrays throughout
+        Random positionGenerator = ImageEncoder.getSeededRandom(randomSeed);
+        Dictionary<int, String> bytesVisited = new Dictionary<int, String>();
+
+        foreach (char bitToEmbed in bitsToEmbed)
+        {
+            int byteIndex = -1;
+            while (byteIndex == -1) { // get a unique, random position to embed the bit in
+                
+            }
+        }
+    }
+
+    // Data manipulation methods
+
+    /// <summary>
+    /// Assumes bitList has been changed in some way, so recreate everything else, EXCEPT for the Image from the singleBits
+    /// </summary>
     public void recreateDataStructuresFromBits()
     {
-        binaryList = DataManipulation.convertBitListToBinaryList(bitList, byteSize);
         bytes = DataManipulation.convertBinaryListToByteList(BinaryList, byteSize);
     }
+
     /// <summary>
     /// Recreates the Image from bytes. Will assign the image private variable to the output
     /// </summary>
@@ -121,6 +155,23 @@ public class ImageEncoder
         image = DataManipulation.imageFromByteList(bytes);
         return image;
     }
+
+    // MISC METHODS 
+
+    public static Random getSeededRandom(String seedString)
+    {
+        int seed = Int32.Parse(seedString); // Converts the seed to an int. must be done to seed the random generator
+        return new Random(seed); // used to determine the random positions
+    }
+
+    /// <summary>
+    /// Saves image
+    /// </summary>
+    /// <param name="filePath">Should include fileName and extension (extension should match file type)</param>
+    public void saveImageToFile (String filePath)
+   {
+        image.Save(filePath);
+   }
 
 
 }

@@ -106,6 +106,35 @@ namespace WindowsFormsApp1.bin.Utilities
         {
             return Convert.ToString(byteValue, 2).PadLeft(byteSize, '0');
         }
+        public static char getValueInBinaryByte (String byteInBinary, int bitIndex)
+        {
+            char resultChar;
+            if (bitIndex >= byteInBinary.Length)
+            {
+                throw new Exception("You are trying to modify a byte at an index (" + bitIndex + ") that is bigger than the actual byte.");
+            }
+            else
+            {
+                resultChar = byteInBinary.ToCharArray()[bitIndex];
+            }
+            return resultChar;
+        }
+        public static String modifyBinaryByte (String byteInBinary, int bitIndex, int newBitValue)
+        {
+            String resultByte = "";
+            if (bitIndex >= byteInBinary.Length)
+            {
+                throw new Exception("You are trying to modify a byte at an index (" + bitIndex + ") that is bigger than the actual byte.");
+            } else
+            {
+                resultByte = byteInBinary.Substring(0, bitIndex) + newBitValue;
+                if (bitIndex < byteInBinary.Length - 1) // get the rest of the byte if the bit that is being modified is not at the end of the byte
+                {
+                    resultByte += byteInBinary.Substring(bitIndex + 1); 
+                }
+            }
+            return resultByte;
+        }
 
         // List functions
 
@@ -193,6 +222,18 @@ namespace WindowsFormsApp1.bin.Utilities
                 }
             }
             return bytesList;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">type of objects in linked list</typeparam>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static T[] linkedListToArray<T>(LinkedList<T> list)
+        {
+            T[] array = new T[list.Count];
+            list.CopyTo(array, 0); // array more efficient for this. probably should have used arrays throughout
+            return array;
         }
 
         // Image functions

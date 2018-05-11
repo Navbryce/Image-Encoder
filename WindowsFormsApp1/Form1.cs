@@ -17,9 +17,10 @@ namespace WindowsFormsApp1
         public static int DECODING = -1;
         public static int NEUTRAL = 0;
 
-        private String defaultDialogueValue;
-
+        private String defaultDialogueValue; // contains the default path of the dialogue BEFORE any image has been selected
         private Size maxImagePreviewSize;
+        private Image uploadedImage;
+
         private int status = ImageEncoderView.NEUTRAL; // represents what the user is trying to do
         public ImageEncoderView()
         {
@@ -60,8 +61,8 @@ namespace WindowsFormsApp1
 
             if (filepath.Length > 0 && !filepath.Equals(defaultDialogueValue)) // returns the defaultDialogueValue if no image was selected
             {
-                Image image = System.Drawing.Image.FromFile(filepath);
-                Image previewImage = (System.Drawing.Image)image.Clone(); // Clones the Image so it can be modified to fit the preview box
+                uploadedImage = System.Drawing.Image.FromFile(filepath);
+                Image previewImage = (System.Drawing.Image)uploadedImage.Clone(); // Clones the Image so it can be modified to fit the preview box
 
                 // Resize the piciture box to maintain image dimensions
                 Size imageDimensions = previewImage.Size;
@@ -119,22 +120,26 @@ namespace WindowsFormsApp1
             String positionSeedText = positionSeed.Text;
             if (status == ImageEncoderView.ENCODING)
             {
-                encode(encryptKeyText, positionSeedText);
+                encode(uploadedImage, encryptKeyText, positionSeedText); // uploadedImage -- private variable where upload image is stored
             }
         }
 
         // Utility functions
 
         // ENCODE/DECODE FUNCTIONS
-        private void encode (String encryptionKeyText, String positionSeedText)
+        private void encode (Image image, String encryptionKeyText, String positionSeedText)
         {
             String text = messageBox.Text;
-            if (text.Length > 0)
+            if ((text.Length > 0 && encryptionKeyText.Length > 0) && positionSeedText.Length > 0)
             {
                 EncryptString encode = new EncryptString(text);
                 LinkedList<char> encryptedBits = encode.encrypt(encryptionKeyText);
                 EncryptString decrypt = new EncryptString(encryptedBits, encryptionKeyText);
-                String message = decrypt.recreateStringFromBytes();                
+                String message = decrypt.recreateStringFromBytes();
+
+                ImageEncoder imageEncode = new ImageEncoder(image, "bmp");
+
+                var a = "a";
             }
         }
 
