@@ -70,19 +70,26 @@ namespace WindowsFormsApp1.bin.Utilities
 
         }
 
-        public static LinkedList<char> bitXORListReverse (LinkedList<char> xorBits, LinkedList<char> originalCompareBits)
+        public static LinkedList<char> bitXORListReverse (LinkedList<char> xorBits, LinkedList<char> originalCompareBits, int compareBitOffset)
         {
             LinkedList<char> originalBits = new LinkedList<char>();
 
             LinkedListNode<char> mainNode = xorBits.First;
             LinkedListNode<char> compareNode = originalCompareBits.First;
 
+           
             while (mainNode != null)
             {
-                char output = bitXORReverse(mainNode.Value, compareNode.Value);
-                originalBits.AddLast(output);
+                if (compareBitOffset == 0) // sometimes the compare bits need to be offset (you need to jump forward)
+                {
+                    char output = bitXORReverse(mainNode.Value, compareNode.Value);
+                    originalBits.AddLast(output);
 
-                mainNode = mainNode.Next;
+                    mainNode = mainNode.Next;
+                } else
+                {
+                    compareBitOffset -= 1; // the code outside the else (right below) pushes the compare node one bit forward
+                }
                 compareNode = compareNode.Next;
                 if (compareNode == null) // all of the compare bits have been iterated through, so restart from the beginning
                 {
@@ -111,7 +118,7 @@ namespace WindowsFormsApp1.bin.Utilities
             char resultChar;
             if (bitIndex >= byteInBinary.Length)
             {
-                throw new Exception("You are trying to modify a byte at an index (" + bitIndex + ") that is bigger than the actual byte.");
+                throw new Exception("You are trying to view a byte at an index (" + bitIndex + ") that is bigger than the actual byte.");
             }
             else
             {
@@ -119,7 +126,7 @@ namespace WindowsFormsApp1.bin.Utilities
             }
             return resultChar;
         }
-        public static String modifyBinaryByte (String byteInBinary, int bitIndex, int newBitValue)
+        public static String modifyBinaryByte (String byteInBinary, int bitIndex, char newBitValue)
         {
             String resultByte = "";
             if (bitIndex >= byteInBinary.Length)
@@ -203,7 +210,12 @@ namespace WindowsFormsApp1.bin.Utilities
             }
             return binaryList;
         }
-        public static String convertBytesToString (LinkedList<Byte> bytes)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns>returns a string (will NEVER throw an error even if the byte represents an unknown character)</returns>
+        public static String convertBytesToString (LinkedList<Byte> bytes) 
         {
             return System.Text.Encoding.UTF8.GetString(bytes.ToArray(), 0, bytes.Count);
         }

@@ -120,26 +120,28 @@ namespace WindowsFormsApp1
             String positionSeedText = positionSeed.Text;
             if (status == ImageEncoderView.ENCODING)
             {
-                encode(uploadedImage, encryptKeyText, positionSeedText); // uploadedImage -- private variable where upload image is stored
+                encode(uploadedImage, encryptKeyText, positionSeedText, messageBox.Text); // uploadedImage -- private variable where upload image is stored
             }
         }
 
         // Utility functions
 
         // ENCODE/DECODE FUNCTIONS
-        private void encode (Image image, String encryptionKeyText, String positionSeedText)
+        private void encode (Image image, String encryptionKeyText, String positionSeedText, String message)
         {
-            String text = messageBox.Text;
-            if ((text.Length > 0 && encryptionKeyText.Length > 0) && positionSeedText.Length > 0)
+            if ((message.Length > 0 && encryptionKeyText.Length > 0) && positionSeedText.Length > 0)
             {
-                EncryptString encode = new EncryptString(text);
-                LinkedList<char> encryptedBits = encode.encrypt(encryptionKeyText);
-                EncryptString decrypt = new EncryptString(encryptedBits, encryptionKeyText);
-                String message = decrypt.recreateStringFromBytes();
 
                 ImageEncoder imageEncode = new ImageEncoder(image, "bmp");
+                imageEncode.embedMessage(message, encryptionKeyText, positionSeedText);
+                imageEncode.saveImageToFile("C:/Users/navba/Desktop/newImage.bmp");
 
-                var a = "a";
+                // try to decode
+                String decodeMessage = imageEncode.decrypt(encryptionKeyText, positionSeedText, -1);
+                System.Diagnostics.Debug.WriteLine("DECODED:" + decodeMessage);
+
+
+
             }
         }
 

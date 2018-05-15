@@ -25,11 +25,11 @@ namespace WindowsFormsApp1.bin {
         {
             get
             {
-                return BitList;
+                return bitList;
             }
             set
             {
-                BitList = value;
+                bitList = value;
             }
         }
         public LinkedList<Byte> Bytes
@@ -67,10 +67,16 @@ namespace WindowsFormsApp1.bin {
             binaryList = DataManipulation.convertByteListToBinaryList(bytes, byteSize);
             bitList = DataManipulation.convertBinaryListToBitList(binaryList);
         }
-        public EncryptString(LinkedList<char> encryptedBits, String encryptString)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="encryptedBits"></param>
+        /// <param name="encryptString"></param>
+        /// <param name="byteOffset">the number of bytes that the encrypted bits are from the actual start of the message (0 if the first bit represents the first bit of the message)</param>
+        public EncryptString(LinkedList<char> encryptedBits, String encryptString, int byteOffset)
         {
             bitList = encryptedBits; // sets the private variable bitList to the encrypted bits
-            decrypt(encryptString); // tries to decrypt. will update EVERy data structure except for the string
+            decrypt(encryptString, byteOffset); // tries to decrypt. will update EVERy data structure except for the string
             message = null;
         }
         /// <summary>
@@ -105,21 +111,23 @@ namespace WindowsFormsApp1.bin {
             return encryptKeyBits;
         }
 
-        public LinkedList<char> decrypt(String encryptKey)
+        public LinkedList<char> decrypt(String encryptKey, int byteOffset)
         {
             LinkedList<char> originalComparisonBits = encryptEncryptionKey(encryptKey);
-            LinkedList<char> decryptedBits = decrypt(originalComparisonBits); // updates every data structure except for the original string
+            LinkedList<char> decryptedBits = decrypt(originalComparisonBits, byteOffset); // updates every data structure except for the original string
             return decryptedBits;
         }
-        
+
         /// <summary>
         /// Recreates every data structure based on the decrypted bits EXCEPT for the original string value
         /// </summary>
         /// <param name="originalComparisonBits"></param>
+        /// <param name="byteOffset">the number of bytes that the encrypted bits are from the actual start of the message (0 if the first bit represents the first bit of the message)</param>
         /// <returns></returns>
-        public LinkedList<char> decrypt(LinkedList<char> originalComparisonBits)
+        public LinkedList<char> decrypt(LinkedList<char> originalComparisonBits, int byteOffset)
         {
-           LinkedList<char> decryptedBits = DataManipulation.bitXORListReverse(bitList, originalComparisonBits);
+            int compareBitOffset = byteOffset * 8;
+            LinkedList<char> decryptedBits = DataManipulation.bitXORListReverse(bitList, originalComparisonBits, compareBitOffset);
             bitList = decryptedBits;
             recreateDataStructuresFromBits();
             return decryptedBits;
