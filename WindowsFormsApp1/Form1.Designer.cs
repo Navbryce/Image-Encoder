@@ -38,23 +38,27 @@
             this.decodeActionButton = new System.Windows.Forms.RadioButton();
             this.parametersPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.requiredParametersPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.messageParameterPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.encryptionKey = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
+            this.encryptionKey = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.label3 = new System.Windows.Forms.Label();
             this.positionSeed = new System.Windows.Forms.TextBox();
+            this.messageParameterPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
-            this.messageBox = new System.Windows.Forms.TextBox();
             this.applyActionButton = new System.Windows.Forms.Button();
+            this.outputPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.outputLabel = new System.Windows.Forms.Label();
+            this.outputMessage = new System.Windows.Forms.RichTextBox();
+            this.messageBox = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).BeginInit();
             this.actionSelectPanel.SuspendLayout();
             this.parametersPanel.SuspendLayout();
             this.requiredParametersPanel.SuspendLayout();
-            this.messageParameterPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
+            this.messageParameterPanel.SuspendLayout();
+            this.outputPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageUploadDialog
@@ -124,18 +128,6 @@
             resources.ApplyResources(this.requiredParametersPanel, "requiredParametersPanel");
             this.requiredParametersPanel.Name = "requiredParametersPanel";
             // 
-            // messageParameterPanel
-            // 
-            this.messageParameterPanel.Controls.Add(this.label4);
-            this.messageParameterPanel.Controls.Add(this.messageBox);
-            resources.ApplyResources(this.messageParameterPanel, "messageParameterPanel");
-            this.messageParameterPanel.Name = "messageParameterPanel";
-            // 
-            // encryptionKey
-            // 
-            resources.ApplyResources(this.encryptionKey, "encryptionKey");
-            this.encryptionKey.Name = "encryptionKey";
-            // 
             // flowLayoutPanel1
             // 
             this.flowLayoutPanel1.Controls.Add(this.label1);
@@ -147,6 +139,11 @@
             // 
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
+            // 
+            // encryptionKey
+            // 
+            resources.ApplyResources(this.encryptionKey, "encryptionKey");
+            this.encryptionKey.Name = "encryptionKey";
             // 
             // flowLayoutPanel2
             // 
@@ -166,17 +163,18 @@
             resources.ApplyResources(this.positionSeed, "positionSeed");
             this.positionSeed.Name = "positionSeed";
             // 
+            // messageParameterPanel
+            // 
+            this.messageParameterPanel.Controls.Add(this.label4);
+            this.messageParameterPanel.Controls.Add(this.messageBox);
+            resources.ApplyResources(this.messageParameterPanel, "messageParameterPanel");
+            this.messageParameterPanel.Name = "messageParameterPanel";
+            // 
             // label4
             // 
             resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
             this.label4.Click += new System.EventHandler(this.label4_Click);
-            // 
-            // messageBox
-            // 
-            resources.ApplyResources(this.messageBox, "messageBox");
-            this.messageBox.Name = "messageBox";
-            this.messageBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // applyActionButton
             // 
@@ -186,11 +184,35 @@
             this.applyActionButton.UseVisualStyleBackColor = true;
             this.applyActionButton.Click += new System.EventHandler(this.applyActionButton_Click);
             // 
+            // outputPanel
+            // 
+            this.outputPanel.Controls.Add(this.outputLabel);
+            this.outputPanel.Controls.Add(this.outputMessage);
+            resources.ApplyResources(this.outputPanel, "outputPanel");
+            this.outputPanel.Name = "outputPanel";
+            // 
+            // outputLabel
+            // 
+            resources.ApplyResources(this.outputLabel, "outputLabel");
+            this.outputLabel.Name = "outputLabel";
+            this.outputLabel.Click += new System.EventHandler(this.outputLabel_Click);
+            // 
+            // outputMessage
+            // 
+            resources.ApplyResources(this.outputMessage, "outputMessage");
+            this.outputMessage.Name = "outputMessage";
+            // 
+            // messageBox
+            // 
+            resources.ApplyResources(this.messageBox, "messageBox");
+            this.messageBox.Name = "messageBox";
+            // 
             // ImageEncoderView
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.outputPanel);
             this.Controls.Add(this.applyActionButton);
             this.Controls.Add(this.parametersPanel);
             this.Controls.Add(this.actionSelectPanel);
@@ -205,12 +227,14 @@
             this.actionSelectPanel.PerformLayout();
             this.parametersPanel.ResumeLayout(false);
             this.requiredParametersPanel.ResumeLayout(false);
-            this.messageParameterPanel.ResumeLayout(false);
-            this.messageParameterPanel.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
+            this.messageParameterPanel.ResumeLayout(false);
+            this.messageParameterPanel.PerformLayout();
+            this.outputPanel.ResumeLayout(false);
+            this.outputPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -234,8 +258,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox positionSeed;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox messageBox;
         private System.Windows.Forms.Button applyActionButton;
+        private System.Windows.Forms.FlowLayoutPanel outputPanel;
+        private System.Windows.Forms.Label outputLabel;
+        private System.Windows.Forms.RichTextBox outputMessage;
+        private System.Windows.Forms.RichTextBox messageBox;
     }
 }
 

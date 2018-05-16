@@ -196,6 +196,7 @@ public class ImageEncoder
         }
         binaryList = new LinkedList<string>(bytesArray); // convert the bytes array back into a linkedlist
         recreateDataStructuresFromBits(); // update the linkedlist with actual byte objects
+        recreateImageFromBytes(); // update the actual image
 
         // System.Diagnostics.Debug.WriteLine(binaryString);
     }
@@ -261,10 +262,15 @@ public class ImageEncoder
 
     /// <summary>
     /// Saves image
+    /// Will OVERRIDE existing image if one has the same path
     /// </summary>
     /// <param name="filePath">Should include fileName and extension (extension should match file type)</param>
     public void saveImageToFile (String filePath)
    {
+        if (System.IO.File.Exists(filePath)) // Delete the file if it exists
+        {
+            System.IO.File.Delete(filePath); 
+        }
         image.Save(filePath);
    }
 

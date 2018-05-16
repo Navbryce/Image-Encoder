@@ -30,6 +30,7 @@ namespace WindowsFormsApp1
 
             // Set default visibilities
 
+            outputMessage.ReadOnly = true; // Decoding message box is read only
             // Disable action buttons until an image is selected
             toggleActionButtons(false);
             updateActionStatus();
@@ -121,18 +122,37 @@ namespace WindowsFormsApp1
             if (status == ImageEncoderView.ENCODING)
             {
                 encode(uploadedImage, encryptKeyText, positionSeedText, messageBox.Text); // uploadedImage -- private variable where upload image is stored
+            } else if (status == ImageEncoderView.DECODING)
+            {
+                decode(uploadedImage, encryptKeyText, positionSeedText);
             }
         }
 
         // Utility functions
 
         // ENCODE/DECODE FUNCTIONS
+        private void decode (Image image, String encryptionKeyText, String positionSeedText)
+        {
+            if (encryptionKeyText.Length > 0 && positionSeedText.Length > 0)
+            {
+                ImageEncoder imageEncode = new ImageEncoder(image, "bmp"); // assume bmp for now
+                String message = imageEncode.decrypt(encryptionKeyText, positionSeedText, -1);
+                if (message.Length > 0)
+                {
+                    outputMessage.Text = message; // update the text in the output box
+                } else
+                {
+                    outputMessage.Text = "The image could not be succesfully. Maybe you have the wrong encryption key and/or position seed.";
+                }
+
+            }
+        }
         private void encode (Image image, String encryptionKeyText, String positionSeedText, String message)
         {
             if ((message.Length > 0 && encryptionKeyText.Length > 0) && positionSeedText.Length > 0)
             {
 
-                ImageEncoder imageEncode = new ImageEncoder(image, "bmp");
+                ImageEncoder imageEncode = new ImageEncoder(image, "bmp"); // assume bmp for now
                 imageEncode.embedMessage(message, encryptionKeyText, positionSeedText);
                 imageEncode.saveImageToFile("C:/Users/navba/Desktop/newImage.bmp");
 
@@ -229,6 +249,9 @@ namespace WindowsFormsApp1
             return oldStatus;
         }
 
+        private void outputLabel_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
