@@ -17,8 +17,15 @@ namespace WindowsFormsApp1
         public static int DECODING = -1;
         public static int NEUTRAL = 0;
 
+        public static int MAINPAGEINDEX = 0;
+        public static int OUTPUTPAGEINDEX = 1;
+
+        private Panel currentPage;
         private String defaultDialogueValue; // contains the default path of the dialogue BEFORE any image has been selected
         private Size maxImagePreviewSize;
+        private ImageEncoder outputImageEncoderVar;
+        private String outputMessageVar;
+        private Panel[] pages;
         private Image uploadedImage;
 
         private int status = ImageEncoderView.NEUTRAL; // represents what the user is trying to do
@@ -29,6 +36,9 @@ namespace WindowsFormsApp1
             defaultDialogueValue = imageUploadDialog.FileName;
 
             // Set default visibilities
+            pages = getAllPages();
+            hideAllPages(pages);
+            switchPage(pages[ImageEncoderView.MAINPAGEINDEX]);
 
             outputMessage.ReadOnly = true; // Decoding message box is read only
             // Disable action buttons until an image is selected
@@ -131,42 +141,48 @@ namespace WindowsFormsApp1
         // Utility functions
 
         // ENCODE/DECODE FUNCTIONS
-        private void decode (Image image, String encryptionKeyText, String positionSeedText)
+        private void decode(Image image, String encryptionKeyText, String positionSeedText)
         {
             if (encryptionKeyText.Length > 0 && positionSeedText.Length > 0)
             {
+                switchPage(pages[ImageEncoderView.OUTPUTPAGEINDEX]); // switch to the output page
                 ImageEncoder imageEncode = new ImageEncoder(image, "bmp"); // assume bmp for now
-                String message = imageEncode.decrypt(encryptionKeyText, positionSeedText, -1);
-                if (message.Length > 0)
+                outputMessageVar = imageEncode.decrypt(encryptionKeyText, positionSeedText, -1);
+                if (outputMessageVar.Length == 0)
                 {
-                    outputMessage.Text = message; // update the text in the output box
-                } else
-                {
-                    outputMessage.Text = "The image could not be succesfully. Maybe you have the wrong encryption key and/or position seed.";
+                    outputMessageVar = "The image could not be succesfully. Maybe you have the wrong encryption key and/or position seed.";
                 }
-
+                outputMessage.Text = outputMessageVar;
             }
         }
-        private void encode (Image image, String encryptionKeyText, String positionSeedText, String message)
+        /// <summary>
+        /// Called when the user tries to save after decoding
+        /// </summary>
+        private void decodeSave()
+        {
+
+        }
+        ///
+        private void encode(Image image, String encryptionKeyText, String positionSeedText, String message)
         {
             if ((message.Length > 0 && encryptionKeyText.Length > 0) && positionSeedText.Length > 0)
             {
-
-                ImageEncoder imageEncode = new ImageEncoder(image, "bmp"); // assume bmp for now
-                imageEncode.embedMessage(message, encryptionKeyText, positionSeedText);
-                imageEncode.saveImageToFile("C:/Users/navba/Desktop/newImage.bmp");
-
-                // try to decode
-                String decodeMessage = imageEncode.decrypt(encryptionKeyText, positionSeedText, -1);
-                System.Diagnostics.Debug.WriteLine("DECODED:" + decodeMessage);
-
-
-
+                switchPage(pages[ImageEncoderView.OUTPUTPAGEINDEX]); // switch to the output page
+                outputImageEncoderVar = new ImageEncoder(image, "bmp"); // assume bmp for now
+                outputImageEncoderVar.embedMessage(message, encryptionKeyText, positionSeedText);
+                outputImageEncoderVar.saveImageToFile("C:/Users/navba/Desktop/newImage.bmp");
             }
+        }
+        /// <summary>
+        /// Called when the user tries to save after encoding
+        /// </summary>
+        private void encodeSave()
+        {
+
         }
 
         // Private utility functions
-        private String getActionString (int status)
+        private String getActionString(int status)
         {
             String returnString;
             if (status == ImageEncoderView.DECODING)
@@ -182,7 +198,17 @@ namespace WindowsFormsApp1
             return returnString;
         }
 
-        private Size scaleImageToSize (Size imageSize, Size boxSize)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>an array of panels with all the pages</returns>
+        private Panel[] getAllPages()
+        {
+            Panel[] pages = { mainPage, outputPage };
+            return pages;
+        }
+
+        private Size scaleImageToSize(Size imageSize, Size boxSize)
         {
             double ratio = (double)imageSize.Width / (double)imageSize.Height;
             int widthBasedOnHeight = (int)(ratio * boxSize.Height); // Use the boxes height?
@@ -198,6 +224,26 @@ namespace WindowsFormsApp1
                 returnSize = new Size(widthBasedOnHeight, boxSize.Height);
             }
             return returnSize;
+        }
+        private void hideAllPages(Panel[] pages)
+        {
+            foreach (Panel page in pages)
+            {
+                page.Visible = false;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newPage">The new page (panel object)</param>
+        private void switchPage(Panel newPage)
+        {
+            newPage.Visible = true;
+            if (currentPage != null)
+            {
+                currentPage.Visible = false; // make the current page invisible
+            }
+            currentPage = newPage;
         }
         private void toggleActionButtons(Boolean newStatus)
         {
@@ -228,6 +274,8 @@ namespace WindowsFormsApp1
                 messageParameterPanel.Visible = false;
                 applyActionButton.Text = getActionString(status);
                 applyActionButton.Visible = true;
+                decryptOutputPanel.Visible = true; // set this visibility ahead of time. will still be invisible because parent is hidden
+                encryptOutputPanel.Visible = false;
             }
             else if (encodeActionButton.Checked)
             {
@@ -237,7 +285,9 @@ namespace WindowsFormsApp1
                 messageParameterPanel.Visible = true;
                 applyActionButton.Text = getActionString(status);
                 applyActionButton.Visible = true;
-
+                encryptOutputPanel.Visible = true; // set this visibility ahead of time. will still be invisible because parent is hidden
+                decryptOutputPanel.Visible = false;
+           
             }
             else
             {
@@ -250,6 +300,16 @@ namespace WindowsFormsApp1
         }
 
         private void outputLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mainPage_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void outputPage_Paint(object sender, PaintEventArgs e)
         {
 
         }

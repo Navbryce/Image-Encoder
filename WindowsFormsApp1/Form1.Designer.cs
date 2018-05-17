@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImageEncoderView));
             this.imageUploadDialog = new System.Windows.Forms.OpenFileDialog();
             this.button1 = new System.Windows.Forms.Button();
@@ -46,11 +47,19 @@
             this.positionSeed = new System.Windows.Forms.TextBox();
             this.messageParameterPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
+            this.messageBox = new System.Windows.Forms.RichTextBox();
             this.applyActionButton = new System.Windows.Forms.Button();
             this.outputPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.outputLabel = new System.Windows.Forms.Label();
             this.outputMessage = new System.Windows.Forms.RichTextBox();
-            this.messageBox = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
+            this.outputPage = new System.Windows.Forms.Panel();
+            this.mainPage = new System.Windows.Forms.Panel();
+            this.decryptOutputPanel = new System.Windows.Forms.Panel();
+            this.encryptOutputPanel = new System.Windows.Forms.Panel();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.saveButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).BeginInit();
             this.actionSelectPanel.SuspendLayout();
             this.parametersPanel.SuspendLayout();
@@ -59,6 +68,9 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.messageParameterPanel.SuspendLayout();
             this.outputPanel.SuspendLayout();
+            this.outputPage.SuspendLayout();
+            this.mainPage.SuspendLayout();
+            this.decryptOutputPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageUploadDialog
@@ -176,6 +188,11 @@
             this.label4.Name = "label4";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
+            // messageBox
+            // 
+            resources.ApplyResources(this.messageBox, "messageBox");
+            this.messageBox.Name = "messageBox";
+            // 
             // applyActionButton
             // 
             resources.ApplyResources(this.applyActionButton, "applyActionButton");
@@ -186,8 +203,9 @@
             // 
             // outputPanel
             // 
-            this.outputPanel.Controls.Add(this.outputLabel);
-            this.outputPanel.Controls.Add(this.outputMessage);
+            this.outputPanel.Controls.Add(this.encryptOutputPanel);
+            this.outputPanel.Controls.Add(this.decryptOutputPanel);
+            this.outputPanel.Controls.Add(this.saveButton);
             resources.ApplyResources(this.outputPanel, "outputPanel");
             this.outputPanel.Name = "outputPanel";
             // 
@@ -202,22 +220,54 @@
             resources.ApplyResources(this.outputMessage, "outputMessage");
             this.outputMessage.Name = "outputMessage";
             // 
-            // messageBox
+            // contextMenuStrip1
             // 
-            resources.ApplyResources(this.messageBox, "messageBox");
-            this.messageBox.Name = "messageBox";
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            resources.ApplyResources(this.contextMenuStrip1, "contextMenuStrip1");
+            // 
+            // outputPage
+            // 
+            this.outputPage.Controls.Add(this.outputLabel);
+            this.outputPage.Controls.Add(this.outputPanel);
+            resources.ApplyResources(this.outputPage, "outputPage");
+            this.outputPage.Name = "outputPage";
+            this.outputPage.Paint += new System.Windows.Forms.PaintEventHandler(this.outputPage_Paint);
+            // 
+            // mainPage
+            // 
+            this.mainPage.Controls.Add(this.parametersPanel);
+            this.mainPage.Controls.Add(this.actionSelectPanel);
+            this.mainPage.Controls.Add(this.applyActionButton);
+            this.mainPage.Controls.Add(this.picturePreview);
+            this.mainPage.Controls.Add(this.button1);
+            resources.ApplyResources(this.mainPage, "mainPage");
+            this.mainPage.Name = "mainPage";
+            this.mainPage.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPage_Paint);
+            // 
+            // decryptOutputPanel
+            // 
+            this.decryptOutputPanel.Controls.Add(this.outputMessage);
+            resources.ApplyResources(this.decryptOutputPanel, "decryptOutputPanel");
+            this.decryptOutputPanel.Name = "decryptOutputPanel";
+            // 
+            // encryptOutputPanel
+            // 
+            resources.ApplyResources(this.encryptOutputPanel, "encryptOutputPanel");
+            this.encryptOutputPanel.Name = "encryptOutputPanel";
+            // 
+            // saveButton
+            // 
+            resources.ApplyResources(this.saveButton, "saveButton");
+            this.saveButton.Name = "saveButton";
+            this.saveButton.UseVisualStyleBackColor = true;
             // 
             // ImageEncoderView
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.Controls.Add(this.outputPanel);
-            this.Controls.Add(this.applyActionButton);
-            this.Controls.Add(this.parametersPanel);
-            this.Controls.Add(this.actionSelectPanel);
-            this.Controls.Add(this.picturePreview);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.outputPage);
+            this.Controls.Add(this.mainPage);
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "ImageEncoderView";
@@ -234,7 +284,10 @@
             this.messageParameterPanel.ResumeLayout(false);
             this.messageParameterPanel.PerformLayout();
             this.outputPanel.ResumeLayout(false);
-            this.outputPanel.PerformLayout();
+            this.outputPage.ResumeLayout(false);
+            this.outputPage.PerformLayout();
+            this.mainPage.ResumeLayout(false);
+            this.decryptOutputPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -263,6 +316,14 @@
         private System.Windows.Forms.Label outputLabel;
         private System.Windows.Forms.RichTextBox outputMessage;
         private System.Windows.Forms.RichTextBox messageBox;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.PageSetupDialog pageSetupDialog1;
+        private System.Windows.Forms.Panel outputPage;
+        private System.Windows.Forms.Panel mainPage;
+        private System.Windows.Forms.Panel decryptOutputPanel;
+        private System.Windows.Forms.Panel encryptOutputPanel;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 
