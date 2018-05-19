@@ -50,16 +50,18 @@
             this.messageBox = new System.Windows.Forms.RichTextBox();
             this.applyActionButton = new System.Windows.Forms.Button();
             this.outputPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.outputLabel = new System.Windows.Forms.Label();
+            this.encryptOutputPanel = new System.Windows.Forms.Panel();
+            this.decryptOutputPanel = new System.Windows.Forms.Panel();
             this.outputMessage = new System.Windows.Forms.RichTextBox();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.outputLabel = new System.Windows.Forms.Label();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.outputPage = new System.Windows.Forms.Panel();
             this.mainPage = new System.Windows.Forms.Panel();
-            this.decryptOutputPanel = new System.Windows.Forms.Panel();
-            this.encryptOutputPanel = new System.Windows.Forms.Panel();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.saveButton = new System.Windows.Forms.Button();
+            this.save = new System.Windows.Forms.SaveFileDialog();
+            this.outputPreview = new System.Windows.Forms.PictureBox();
+            this.backButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picturePreview)).BeginInit();
             this.actionSelectPanel.SuspendLayout();
             this.parametersPanel.SuspendLayout();
@@ -68,9 +70,11 @@
             this.flowLayoutPanel2.SuspendLayout();
             this.messageParameterPanel.SuspendLayout();
             this.outputPanel.SuspendLayout();
+            this.encryptOutputPanel.SuspendLayout();
+            this.decryptOutputPanel.SuspendLayout();
             this.outputPage.SuspendLayout();
             this.mainPage.SuspendLayout();
-            this.decryptOutputPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.outputPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // imageUploadDialog
@@ -206,19 +210,39 @@
             this.outputPanel.Controls.Add(this.encryptOutputPanel);
             this.outputPanel.Controls.Add(this.decryptOutputPanel);
             this.outputPanel.Controls.Add(this.saveButton);
+            this.outputPanel.Controls.Add(this.backButton);
             resources.ApplyResources(this.outputPanel, "outputPanel");
             this.outputPanel.Name = "outputPanel";
+            // 
+            // encryptOutputPanel
+            // 
+            this.encryptOutputPanel.Controls.Add(this.outputPreview);
+            resources.ApplyResources(this.encryptOutputPanel, "encryptOutputPanel");
+            this.encryptOutputPanel.Name = "encryptOutputPanel";
+            // 
+            // decryptOutputPanel
+            // 
+            this.decryptOutputPanel.Controls.Add(this.outputMessage);
+            resources.ApplyResources(this.decryptOutputPanel, "decryptOutputPanel");
+            this.decryptOutputPanel.Name = "decryptOutputPanel";
+            // 
+            // outputMessage
+            // 
+            resources.ApplyResources(this.outputMessage, "outputMessage");
+            this.outputMessage.Name = "outputMessage";
+            // 
+            // saveButton
+            // 
+            resources.ApplyResources(this.saveButton, "saveButton");
+            this.saveButton.Name = "saveButton";
+            this.saveButton.UseVisualStyleBackColor = true;
+            this.saveButton.Click += new System.EventHandler(this.saveButton_Click);
             // 
             // outputLabel
             // 
             resources.ApplyResources(this.outputLabel, "outputLabel");
             this.outputLabel.Name = "outputLabel";
             this.outputLabel.Click += new System.EventHandler(this.outputLabel_Click);
-            // 
-            // outputMessage
-            // 
-            resources.ApplyResources(this.outputMessage, "outputMessage");
-            this.outputMessage.Name = "outputMessage";
             // 
             // contextMenuStrip1
             // 
@@ -244,22 +268,23 @@
             this.mainPage.Name = "mainPage";
             this.mainPage.Paint += new System.Windows.Forms.PaintEventHandler(this.mainPage_Paint);
             // 
-            // decryptOutputPanel
+            // save
             // 
-            this.decryptOutputPanel.Controls.Add(this.outputMessage);
-            resources.ApplyResources(this.decryptOutputPanel, "decryptOutputPanel");
-            this.decryptOutputPanel.Name = "decryptOutputPanel";
+            resources.ApplyResources(this.save, "save");
             // 
-            // encryptOutputPanel
+            // outputPreview
             // 
-            resources.ApplyResources(this.encryptOutputPanel, "encryptOutputPanel");
-            this.encryptOutputPanel.Name = "encryptOutputPanel";
+            resources.ApplyResources(this.outputPreview, "outputPreview");
+            this.outputPreview.Name = "outputPreview";
+            this.outputPreview.TabStop = false;
+            this.outputPreview.Click += new System.EventHandler(this.pictureBox1_Click_1);
             // 
-            // saveButton
+            // backButton
             // 
-            resources.ApplyResources(this.saveButton, "saveButton");
-            this.saveButton.Name = "saveButton";
-            this.saveButton.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.backButton, "backButton");
+            this.backButton.Name = "backButton";
+            this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
             // ImageEncoderView
             // 
@@ -284,10 +309,12 @@
             this.messageParameterPanel.ResumeLayout(false);
             this.messageParameterPanel.PerformLayout();
             this.outputPanel.ResumeLayout(false);
+            this.encryptOutputPanel.ResumeLayout(false);
+            this.decryptOutputPanel.ResumeLayout(false);
             this.outputPage.ResumeLayout(false);
             this.outputPage.PerformLayout();
             this.mainPage.ResumeLayout(false);
-            this.decryptOutputPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.outputPreview)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -323,7 +350,9 @@
         private System.Windows.Forms.Panel decryptOutputPanel;
         private System.Windows.Forms.Panel encryptOutputPanel;
         private System.Windows.Forms.Button saveButton;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.SaveFileDialog save;
+        private System.Windows.Forms.PictureBox outputPreview;
+        private System.Windows.Forms.Button backButton;
     }
 }
 

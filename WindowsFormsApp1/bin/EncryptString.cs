@@ -133,7 +133,7 @@ namespace WindowsFormsApp1.bin {
             return decryptedBits;
         }
 
-
+        // END OF ENCRYPTION/DECRYPTION METHODS
 
         /// <summary>
         /// Data manipulation methods
@@ -161,6 +161,16 @@ namespace WindowsFormsApp1.bin {
             }
             return message;
         }
+
+        // END OF DATA MANIPULATION METHODS
+
+        // MISC METHODS
+        public void saveToFile (String filePath)
+        {
+            String[] lines = { message };
+            FileSystemInteraction.writeToTextFile(filePath, lines);
+        }
+        // ENDS OF MISCS METHODS
 
         
     }

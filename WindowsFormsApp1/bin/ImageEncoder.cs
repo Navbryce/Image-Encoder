@@ -267,10 +267,7 @@ public class ImageEncoder
     /// <param name="filePath">Should include fileName and extension (extension should match file type)</param>
     public void saveImageToFile (String filePath)
    {
-        if (System.IO.File.Exists(filePath)) // Delete the file if it exists
-        {
-            System.IO.File.Delete(filePath); 
-        }
+        FileSystemInteraction.deleteFile(filePath);
         image.Save(filePath);
    }
 

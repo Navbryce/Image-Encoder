@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -23,8 +24,8 @@ namespace WindowsFormsApp1
         private Panel currentPage;
         private String defaultDialogueValue; // contains the default path of the dialogue BEFORE any image has been selected
         private Size maxImagePreviewSize;
-        private ImageEncoder outputImageEncoderVar;
-        private String outputMessageVar;
+        private ImageEncoder outputImageEncoderVar = null;
+        private String outputMessageVar = null;
         private Panel[] pages;
         private Image uploadedImage;
 
@@ -73,16 +74,7 @@ namespace WindowsFormsApp1
             if (filepath.Length > 0 && !filepath.Equals(defaultDialogueValue)) // returns the defaultDialogueValue if no image was selected
             {
                 uploadedImage = System.Drawing.Image.FromFile(filepath);
-                Image previewImage = (System.Drawing.Image)uploadedImage.Clone(); // Clones the Image so it can be modified to fit the preview box
-
-                // Resize the piciture box to maintain image dimensions
-                Size imageDimensions = previewImage.Size;
-                Size newImageDimensions = scaleImageToSize(imageDimensions, maxImagePreviewSize); // maxImagePreviewSize set in constructor of form
-                Console.Write(newImageDimensions);
-                // Apply resize and set image
-                picturePreview.Size = newImageDimensions;
-                picturePreview.Image = previewImage;
-
+                changeImageInBox(picturePreview, uploadedImage, maxImagePreviewSize);
                 // Enable action buttons
                 toggleActionButtons(true);
             }
@@ -137,10 +129,48 @@ namespace WindowsFormsApp1
                 decode(uploadedImage, encryptKeyText, positionSeedText);
             }
         }
+        
 
-        // Utility functions
+        // OUTPUT BUTTONS
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            backFromOutput();
+        }
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            if (status == ImageEncoderView.DECODING && outputMessageVar != null)
+            {
+                decodeSave(new EncryptString(outputMessageVar)); // pass it a new encryptstring in case the user wants to reencrypt. (future feature). Could be made more efficient by using the encryptstring from the initial decode
+            }
+            else if (status == ImageEncoderView.ENCODING && outputImageEncoderVar != null)
+            {
+                encodeSave(outputImageEncoderVar);
+            }
+            else
+            {
+                switchPage(pages[ImageEncoderView.MAINPAGEINDEX]); // There is no output. go back to the main page an error probably occurred.
+                debugPrint("An error probably occurred. On the output page, but there is no output...");
+            }
+        }
+
+        // END OF OUTPUT BUTTONS
+
+
+        // NON-ACTION LISTENER FUNCTIONS
 
         // ENCODE/DECODE FUNCTIONS
+
+
+        /// <summary>
+        /// CALL WHEN THE USER WANTS TO RETURN TO THE MAIN PAGE
+        /// </summary>
+        private void backFromOutput()
+        {
+            switchPage(pages[ImageEncoderView.MAINPAGEINDEX]);
+            outputMessageVar = null;
+            outputImageEncoderVar = null;
+        }
         private void decode(Image image, String encryptionKeyText, String positionSeedText)
         {
             if (encryptionKeyText.Length > 0 && positionSeedText.Length > 0)
@@ -155,14 +185,19 @@ namespace WindowsFormsApp1
                 outputMessage.Text = outputMessageVar;
             }
         }
+
         /// <summary>
         /// Called when the user tries to save after decoding
         /// </summary>
-        private void decodeSave()
+        private void decodeSave(EncryptString decodedStringObject)
         {
-
+            String filePath = saveOutput("Text File (*.txt) | *.txt");
+            if (filePath.Length != 0)
+            {
+                decodedStringObject.saveToFile(filePath);
+            }
         }
-        ///
+       
         private void encode(Image image, String encryptionKeyText, String positionSeedText, String message)
         {
             if ((message.Length > 0 && encryptionKeyText.Length > 0) && positionSeedText.Length > 0)
@@ -170,18 +205,28 @@ namespace WindowsFormsApp1
                 switchPage(pages[ImageEncoderView.OUTPUTPAGEINDEX]); // switch to the output page
                 outputImageEncoderVar = new ImageEncoder(image, "bmp"); // assume bmp for now
                 outputImageEncoderVar.embedMessage(message, encryptionKeyText, positionSeedText);
+                changeImageInBox(outputPreview, outputImageEncoderVar.Image, maxImagePreviewSize);
                 outputImageEncoderVar.saveImageToFile("C:/Users/navba/Desktop/newImage.bmp");
             }
         }
         /// <summary>
         /// Called when the user tries to save after encoding
         /// </summary>
-        private void encodeSave()
+        private void encodeSave(ImageEncoder decodedImage)
         {
-
+            String filePath = saveOutput("Image Files(*.bmp)|*.bmp");
+            if (filePath.Length > 0)
+            {
+                decodedImage.saveImageToFile(filePath);
+            }
         }
-
+        // END OF ENCODE/DECODE FUNCTIONS
+        
+        
+        
         // Private utility functions
+
+
         private String getActionString(int status)
         {
             String returnString;
@@ -207,7 +252,18 @@ namespace WindowsFormsApp1
             Panel[] pages = { mainPage, outputPage };
             return pages;
         }
-
+        /// <summary>
+        /// Will scale the picturebox to the image and maintain the image's dimensions. Will actually scale the picture box to the output dimensions and the image will fill the box (but the box will be the right dimensions)
+        /// </summary>
+        /// <param name="picutreBox"></param>
+        /// <param name="image"></param>
+        private void changeImageInBox (PictureBox box, Image image, Size pictureBoxIdealDimensions)
+        {
+            Image copyImage = (Image)image.Clone(); // in case pictureBox modifies the image when the image fills it
+            Size newDimensions = scaleImageToSize(copyImage.Size, pictureBoxIdealDimensions);
+            box.Size = newDimensions;
+            box.Image = copyImage;
+        }
         private Size scaleImageToSize(Size imageSize, Size boxSize)
         {
             double ratio = (double)imageSize.Width / (double)imageSize.Height;
@@ -231,6 +287,23 @@ namespace WindowsFormsApp1
             {
                 page.Visible = false;
             }
+        }
+        private void debugPrint(String message)
+        {
+            Debug.WriteLine("GUI ERROR: " + message);
+        }
+        private String saveOutput(String filter)
+        {
+            String result;
+            save.Filter = filter;
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                result = save.FileName;
+            } else
+            {
+                result = "";
+            }
+            return result;
         }
         /// <summary>
         /// 
@@ -313,5 +386,12 @@ namespace WindowsFormsApp1
         {
 
         }
+
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }
